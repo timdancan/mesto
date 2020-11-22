@@ -19,6 +19,9 @@ function closeClick() {
 
 popupFormNode.addEventListener('submit', handleFormSubmit);
 
+document.querySelector('.popup__input_place_title').value = 'Жак-Ив Кусто';
+document.querySelector('.popup__input_place_subtitle').value = 'Исследователь океана';
+
 function handleFormSubmit(evt) {
   evt.preventDefault();
   let popupInputTitleNode = document.querySelector('.popup__input_place_title');
