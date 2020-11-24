@@ -9,8 +9,8 @@ let popupInputTitleNode = document.querySelector('.popup__input_place_title');
 let popupInputSubtitleNode = document.querySelector('.popup__input_place_subtitle');
 
 function editClick() {
-  document.querySelector('.popup__input_place_title').value = profileTitleNode.textContent;
-  document.querySelector('.popup__input_place_subtitle').value = profileSubtitleNode.textContent;
+  popupInputTitleNode.value = profileTitleNode.textContent;
+  popupInputSubtitleNode.value = profileSubtitleNode.textContent;
   popupNode.classList.add('popup_visiable');
 }
 
