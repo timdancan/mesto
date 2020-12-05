@@ -7,12 +7,9 @@
   background-size: cover;
   background-repeat: no-repeat;
   margin: auto 0;
+  background-color: transparent;
 }
 
 .element__button:hover {
   cursor: pointer;
-}
-
-.element__button:focus {
-  background-image: url(../../../images/heart-active.svg);
 }
