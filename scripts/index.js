@@ -1,3 +1,30 @@
+const listContainerElement = document.querySelector('.elements') 
+const addNameNode = document.querySelector('.popup__input_add_name')
+const addSrcNode = document.querySelector('.popup__input_add_src')
+const templateElementNode = document.querySelector('.template')
+const popupAddForm = document.querySelector('.popup__form_add')
+
+const editButtonNode = document.querySelector('.profile__edit-button');
+const closePopupNode = document.querySelector('.popup_close');
+const addPopupNode = document.querySelector('.popup_add');
+const closeButtonNode = document.querySelector('.popup__close');
+
+const profileTitleNode = document.querySelector('.profile__title');
+const profileSubtitleNode = document.querySelector('.profile__subtitle');
+const popupFormNode = document.querySelector('.popup__form');
+const popupInputTitleNode = document.querySelector('.popup__input_place_title');
+const popupInputSubtitleNode = document.querySelector('.popup__input_place_subtitle');
+
+const addButtonNode = document.querySelector('.profile__add-button')
+const closeClickAddNode = document.querySelector('.popup__close_add')
+
+const popupImgNode = document.querySelector('.popup__img')
+const popupTextNode = document.querySelector('.popup__text')
+const headerElementNode = document.querySelectorAll('.element__title')
+
+const popupOpenImgNode = document.querySelector('.popup_img')
+const popupCloseImgNode = document.querySelector('.popup__close_img')
+
 const initialCards = [
   {
       name: 'Архыз',
@@ -25,18 +52,6 @@ const initialCards = [
   }
 ]; 
 
-let listContainerElement = document.querySelector('.elements') 
-let addNameNode = document.querySelector('.popup__input_add_name')
-let addSrcNode = document.querySelector('.popup__input_add_scr')
-let addButtonElementNode = document.querySelector('.popup__button_add')
-let templateElementNode = document.querySelector('.template')
-let popupAddForm = document.querySelector('.popup__form_add')
-
-
-function plusFormSubmit (evt) {
-  evt.preventDefault()
-}
-
 function renderList () {
 
   const listItems = initialCards.map(composeItem)
@@ -50,46 +65,70 @@ function composeItem (item) {
   const imgElement = newItem.querySelector('.element__img')
   imgElement.style.backgroundImage = `url(${item.link})`
   headerElement.textContent = item.name
+  imgElement.addEventListener('click', () => {
+    popupOpenImgNode.classList.add('popup_visiable')
+    popupTextNode.textContent = item.name
+    popupImgNode.src = item.link
+  })
+  const removeButton = newItem.querySelector('.element__trash')
+  removeButton.addEventListener('click', removeItem)
+  const elementButton = newItem.querySelector('.element__button')
+  elementButton.addEventListener('click', () => {
+    elementButton.classList.toggle('element__button_active')
+  })
   return newItem
 }
 
-popupAddForm.addEventListener('submit', plusFormSubmit)
-
-function bindAddItemListener () {
-  addButtonElementNode.addEventListener('click', addNewItem)
+function removeItem (evt) {
+  const targetElement = evt.target
+  const targetItem = targetElement.closest('.element')
+  targetItem.remove ()
 }
 
-function addNewItem() {
+function bindAddItemListener () {
+  popupAddForm.addEventListener('submit', addNewItem)
+}
+
+function addNewItem(evt) {
+  evt.preventDefault()
   const inputTitle = addNameNode.value
   const inputSubtitle = addSrcNode.value
   const newItem = composeItem({ name: inputTitle, link: inputSubtitle})
   listContainerElement.prepend(newItem)
+  secondCloseClick ()
 }
 
 renderList ()
 bindAddItemListener ()
-
-let editButtonNode = document.querySelector('.profile__edit-button');
-let closePopupNode = document.querySelector('.popup_close');
-let addPopupNode = document.querySelector('.popup_add');
-let closeButtonNode = document.querySelector('.popup__close');
-
-let profileTitleNode = document.querySelector('.profile__title');
-let profileSubtitleNode = document.querySelector('.profile__subtitle');
-let popupFormNode = document.querySelector('.popup__form');
-let popupInputTitleNode = document.querySelector('.popup__input_place_title');
-let popupInputSubtitleNode = document.querySelector('.popup__input_place_subtitle');
-
-let elementButton = document.querySelectorAll('.element__button')
-let addButtonNode = document.querySelector('.profile__add-button')
-let closeClickAddNode = document.querySelector('.popup__close_add')
-
 
 function editClick() {
   popupInputTitleNode.value = profileTitleNode.textContent;
   popupInputSubtitleNode.value = profileSubtitleNode.textContent;
   closePopupNode.classList.add('popup_visiable');
 }
+
+// elementButton.forEach(function (entry) {
+//   entry.addEventListener('click', () => {
+//     entry.classList.toggle('element__button_active')
+//   })
+// })
+
+// elementButton.forEach(function (entry) {
+//   entry.addEventListener('click', (evt) => {
+//     const eventTarget = evt.target;
+//     eventTarget.classList.toggle('element__button_active')
+//   })
+// })
+
+// let elementButton = document.querySelectorAll('.element__button')
+
+// elementButton.forEach(function (entry) {
+//   entry.addEventListener('click', (e) => {
+//     if(e.target.classList.contains('element__button')){
+//       entry.classList.toggle('element__button_active')
+//     }
+//   })
+// })
 
 function closeClick() {
   closePopupNode.classList.remove('popup_visiable');
@@ -110,15 +149,13 @@ function secondCloseClick () {
   addPopupNode.classList.remove('popup_visiable');
 }
 
-elementButton.forEach(function (entry) {
-  entry.addEventListener('click', function () {
-    entry.classList.toggle('element__button_active')
-  })
-})
+function thirdCloseClick () {
+  popupOpenImgNode.classList.remove('popup_visiable')
+}
 
 popupFormNode.addEventListener('submit', handleFormSubmit);
 editButtonNode.addEventListener('click', editClick);
 closeButtonNode.addEventListener('click', closeClick);
 addButtonNode.addEventListener('click', openClick);
 closeClickAddNode.addEventListener('click', secondCloseClick)
-popupAddForm.addEventListener('submit', plusFormSubmit)
+popupCloseImgNode.addEventListener('click', thirdCloseClick)
