@@ -8,6 +8,7 @@ const editButtonNode = document.querySelector('.profile__edit-button');
 const closePopupNode = document.querySelector('.popup_close');
 const addPopupNode = document.querySelector('.popup_add');
 const closeButtonNode = document.querySelector('.popup__close');
+const popupNode = document.querySelector('.popup');
 
 const profileTitleNode = document.querySelector('.profile__title');
 const profileSubtitleNode = document.querySelector('.profile__subtitle');
@@ -24,6 +25,7 @@ const headerElementNode = document.querySelectorAll('.element__title')
 
 const popupOpenImgNode = document.querySelector('.popup_img')
 const popupCloseImgNode = document.querySelector('.popup__close_img')
+const popupCloseEditNode = document.querySelector('.popup__close_edit')
 
 const initialCards = [
   {
@@ -52,41 +54,74 @@ const initialCards = [
   }
 ]; 
 
-function renderList () {
+function popupOpen(popup) {
+  popup.classList.add('popup_visiable')
+}
+
+function popupClose(popup) {
+  popup.classList.remove('popup_visiable');
+}
+
+function handleFormSubmit(evt) {
+  evt.preventDefault();
+  profileTitleNode.textContent = popupInputTitleNode.value;
+  profileSubtitleNode.textContent = popupInputSubtitleNode.value;
+  popupClose(closePopupNode)
+}
+
+popupFormNode.addEventListener('submit', handleFormSubmit);
+editButtonNode.addEventListener('click', ()=> {
+  popupOpen(closePopupNode)
+  popupInputTitleNode.value = profileTitleNode.textContent;
+  popupInputSubtitleNode.value = profileSubtitleNode.textContent;
+});
+addButtonNode.addEventListener('click', ()=>{
+  popupOpen(addPopupNode)
+});
+closeButtonNode.addEventListener('click', ()=>{
+  popupClose(closePopupNode)
+});
+closeClickAddNode.addEventListener('click', ()=>{
+  popupClose(addPopupNode)
+})
+popupCloseImgNode.addEventListener('click', ()=>{
+  popupClose(popupOpenImgNode)
+})
+popupAddForm.addEventListener('submit', addNewItem)
+
+
+function renderList() {
 
   const listItems = initialCards.map(composeItem)
 
   listContainerElement.append(...listItems)
 }
 
-function composeItem (item) {
+function composeItem(item) {
   const newItem = templateElementNode.content.cloneNode(true)
   const headerElement = newItem.querySelector('.element__title')
   const imgElement = newItem.querySelector('.element__img')
   imgElement.style.backgroundImage = `url(${item.link})`
   headerElement.textContent = item.name
-  imgElement.addEventListener('click', () => {
-    popupOpenImgNode.classList.add('popup_visiable')
+  imgElement.addEventListener('click', ()=> {
+    popupOpen(popupOpenImgNode)
     popupTextNode.textContent = item.name
     popupImgNode.src = item.link
   })
   const removeButton = newItem.querySelector('.element__trash')
   removeButton.addEventListener('click', removeItem)
   const elementButton = newItem.querySelector('.element__button')
-  elementButton.addEventListener('click', () => {
+  elementButton.addEventListener('click', ()=> {
     elementButton.classList.toggle('element__button_active')
   })
   return newItem
 }
 
-function removeItem (evt) {
-  const targetElement = evt.target
-  const targetItem = targetElement.closest('.element')
-  targetItem.remove ()
-}
-
-function bindAddItemListener () {
-  popupAddForm.addEventListener('submit', addNewItem)
+function removeItem(evt) {
+  // const targetElement = evt.target
+  // const targetItem = targetElement.closest('.element')
+  // targetItem.remove ()
+  evt.target.closest('.element').remove()
 }
 
 function addNewItem(evt) {
@@ -95,67 +130,7 @@ function addNewItem(evt) {
   const inputSubtitle = addSrcNode.value
   const newItem = composeItem({ name: inputTitle, link: inputSubtitle})
   listContainerElement.prepend(newItem)
-  secondCloseClick ()
+  popupClose(addPopupNode)
 }
 
-renderList ()
-bindAddItemListener ()
-
-function editClick() {
-  popupInputTitleNode.value = profileTitleNode.textContent;
-  popupInputSubtitleNode.value = profileSubtitleNode.textContent;
-  closePopupNode.classList.add('popup_visiable');
-}
-
-// elementButton.forEach(function (entry) {
-//   entry.addEventListener('click', () => {
-//     entry.classList.toggle('element__button_active')
-//   })
-// })
-
-// elementButton.forEach(function (entry) {
-//   entry.addEventListener('click', (evt) => {
-//     const eventTarget = evt.target;
-//     eventTarget.classList.toggle('element__button_active')
-//   })
-// })
-
-// let elementButton = document.querySelectorAll('.element__button')
-
-// elementButton.forEach(function (entry) {
-//   entry.addEventListener('click', (e) => {
-//     if(e.target.classList.contains('element__button')){
-//       entry.classList.toggle('element__button_active')
-//     }
-//   })
-// })
-
-function closeClick() {
-  closePopupNode.classList.remove('popup_visiable');
-}
-
-function handleFormSubmit(evt) {
-  evt.preventDefault();
-  profileTitleNode.textContent = popupInputTitleNode.value;
-  profileSubtitleNode.textContent = popupInputSubtitleNode.value;
-  closeClick();
-}
-
-function openClick () {
-  addPopupNode.classList.add('popup_visiable');
-}
-
-function secondCloseClick () {
-  addPopupNode.classList.remove('popup_visiable');
-}
-
-function thirdCloseClick () {
-  popupOpenImgNode.classList.remove('popup_visiable')
-}
-
-popupFormNode.addEventListener('submit', handleFormSubmit);
-editButtonNode.addEventListener('click', editClick);
-closeButtonNode.addEventListener('click', closeClick);
-addButtonNode.addEventListener('click', openClick);
-closeClickAddNode.addEventListener('click', secondCloseClick)
-popupCloseImgNode.addEventListener('click', thirdCloseClick)
+renderList()
