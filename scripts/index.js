@@ -25,7 +25,6 @@ const headerElementNode = document.querySelectorAll('.element__title')
 
 const popupOpenImgNode = document.querySelector('.popup_img')
 const popupCloseImgNode = document.querySelector('.popup__close_img')
-const popupCloseEditNode = document.querySelector('.popup__close_edit')
 
 const initialCards = [
   {
@@ -54,6 +53,8 @@ const initialCards = [
   }
 ]; 
 
+
+
 function popupOpen(popup) {
   popup.classList.add('popup_visiable')
 }
@@ -68,6 +69,8 @@ function handleFormSubmit(evt) {
   profileSubtitleNode.textContent = popupInputSubtitleNode.value;
   popupClose(closePopupNode)
 }
+
+
 
 popupFormNode.addEventListener('submit', handleFormSubmit);
 editButtonNode.addEventListener('click', ()=> {
@@ -88,6 +91,7 @@ popupCloseImgNode.addEventListener('click', ()=>{
   popupClose(popupOpenImgNode)
 })
 popupAddForm.addEventListener('submit', addNewItem)
+
 
 
 function renderList() {
@@ -120,7 +124,7 @@ function composeItem(item) {
 function removeItem(evt) {
   // const targetElement = evt.target
   // const targetItem = targetElement.closest('.element')
-  // targetItem.remove ()
+  // targetItem.remove () Для себя оставил, что бы понимать 
   evt.target.closest('.element').remove()
 }
 
