@@ -135,6 +135,8 @@ function addNewItem(evt) {
   const newItem = composeItem({ name: inputTitle, link: inputSubtitle})
   listContainerElement.prepend(newItem)
   popupClose(addPopupNode)
+  addNameNode.value = ''
+  addSrcNode.value = ''
 }
 
 renderList()
