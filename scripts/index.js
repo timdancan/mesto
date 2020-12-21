@@ -7,30 +7,23 @@ const popupCloseForm = document.querySelector('.popup__form_close')
 const addNameNode = document.querySelector('.popup__input_add_name')
 const inputListNode = popupCloseForm.querySelectorAll('.popup__input')
 const errorNode = popupCloseForm.querySelectorAll('.popup__error')
-
 const editButtonNode = document.querySelector('.profile__edit-button');
 const closePopupNode = document.querySelector('.popup_close');
 const addPopupNode = document.querySelector('.popup_add');
 const closeButtonNode = document.querySelector('.popup__close');
-const popupNode = document.querySelector('.popup');
-
+const popupNode = document.querySelectorAll('.popup');
 const profileTitleNode = document.querySelector('.profile__title');
 const profileSubtitleNode = document.querySelector('.profile__subtitle');
-
 const popupInputTitleNode = document.querySelector('.popup__input_place_title');
 const popupInputSubtitleNode = document.querySelector('.popup__input_place_subtitle');
-
 const addButtonNode = document.querySelector('.profile__add-button')
 const closeClickAddNode = document.querySelector('.popup__close_add')
-
 const popupImgNode = document.querySelector('.popup__img')
 const popupTextNode = document.querySelector('.popup__text')
 const headerElementNode = document.querySelectorAll('.element__title')
-
 const popupOpenImgNode = document.querySelector('.popup_img')
 const popupCloseImgNode = document.querySelector('.popup__close_img')
 const bodyNode = document.querySelector('.body')
-
 const initialCards = [
   {
       name: 'Архыз',
@@ -62,10 +55,22 @@ const initialCards = [
 
 function popupOpen(popup) {
   popup.classList.add('popup_visiable')
+  bodyNode.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape') {
+      const popupActive = document.querySelector('.popup_visiable')
+      popupClose(popupActive)
+    }
+  });
 }
 
 function popupClose(popup) {
   popup.classList.remove('popup_visiable');
+  bodyNode.removeEventListener('keydown', (e)=>{
+    if (e.key === 'Escape') {
+      const popupActive = document.querySelector('.popup_visiable')
+      popupClose(popupActive)
+    }
+  });
 }
 
 function handleFormSubmit() {
@@ -73,6 +78,7 @@ function handleFormSubmit() {
   profileSubtitleNode.textContent = popupInputSubtitleNode.value;
   popupClose(closePopupNode)
 }
+
 
 
 popupFormNode.addEventListener('submit', handleFormSubmit);
@@ -95,35 +101,22 @@ closeButtonNode.addEventListener('click', ()=>{
     input.classList.remove('popup__input_type_error')
   })
 });
-closePopupNode.addEventListener('click', (e)=>{
-  if (e.target.classList.contains('popup_close')) {
-    popupClose(closePopupNode)
-  }
-});
-bodyNode.addEventListener('keydown', (e)=>{
-  if (e.key === 'Escape') {
-    popupClose(closePopupNode)
-    popupClose(addPopupNode)
-    popupClose(popupOpenImgNode)
-  }
-});
+popupNode.forEach(close=> {
+  close.addEventListener('click', e=>{
+    if (e.target.classList.contains('popup')) {
+      popupClose(close)
+    }
+  })
+})
 closeClickAddNode.addEventListener('click', ()=>{
   popupClose(addPopupNode)
 })
-addPopupNode.addEventListener('click', (e)=>{
-  if (e.target.classList.contains('popup_add')) {
-    popupClose(addPopupNode)
-  }
-})
+
 popupCloseImgNode.addEventListener('click', ()=>{
   popupClose(popupOpenImgNode)
 })
-popupOpenImgNode.addEventListener('click', (e)=>{
-  if (e.target.classList.contains('popup_img')) {
-    popupClose(popupOpenImgNode)
-  }
-})
 popupAddForm.addEventListener('submit', addNewItem)
+
 
 
 
@@ -144,6 +137,7 @@ function composeItem(item) {
     popupOpen(popupOpenImgNode)
     popupTextNode.textContent = item.name
     popupImgNode.src = item.link
+    popupImgNode.alt = item.name
   })
   const removeButton = newItem.querySelector('.element__trash')
   removeButton.addEventListener('click', removeItem)
