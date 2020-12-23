@@ -55,31 +55,27 @@ const initialCards = [
 
 function popupOpen(popup) {
   popup.classList.add('popup_visiable')
-  bodyNode.addEventListener('keydown', (e)=>{
-    if (e.key === 'Escape') {
-      const popupActive = document.querySelector('.popup_visiable')
-      popupClose(popupActive)
-    }
-  });
+  bodyNode.addEventListener('keydown', addKey)
 }
 
 function popupClose(popup) {
   popup.classList.remove('popup_visiable');
-  bodyNode.removeEventListener('keydown', (e)=>{
-    if (e.key === 'Escape') {
-      const popupActive = document.querySelector('.popup_visiable')
-      popupClose(popupActive)
-    }
-  });
+  bodyNode.removeEventListener('keydown', addKey)
 }
 
-function handleFormSubmit() {
+function handleFormSubmit(evt) {
+  evt.preventDefault()
   profileTitleNode.textContent = popupInputTitleNode.value;
   profileSubtitleNode.textContent = popupInputSubtitleNode.value;
   popupClose(closePopupNode)
 }
 
-
+function addKey (e) {
+  if (e.key === 'Escape') {
+    const popupActive = document.querySelector('.popup_visiable')
+    popupClose(popupActive)
+  }
+}
 
 popupFormNode.addEventListener('submit', handleFormSubmit);
 editButtonNode.addEventListener('click', ()=> {
@@ -152,12 +148,14 @@ function removeItem(evt) {
   evt.target.closest('.element').remove()
 }
 
-function addNewItem() {
+function addNewItem(evt) {
+  evt.preventDefault()
   const inputTitle = addNameNode.value
   const inputSubtitle = addSrcNode.value
   const newItem = composeItem({ name: inputTitle, link: inputSubtitle})
   listContainerElement.prepend(newItem)
   popupClose(addPopupNode)
+  // addPopupNode.reset() Не работает у меня ресет.
   addNameNode.value = ''
   addSrcNode.value = ''
 }
