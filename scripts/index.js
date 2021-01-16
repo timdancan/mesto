@@ -155,9 +155,7 @@ function addNewItem(evt) {
   const newItem = composeItem({ name: inputTitle, link: inputSubtitle})
   listContainerElement.prepend(newItem)
   popupClose(addPopupNode)
-  // addPopupNode.reset() Не работает у меня ресет.
-  addNameNode.value = ''
-  addSrcNode.value = ''
+  popupAddForm.reset()
 }
 
 renderList()
