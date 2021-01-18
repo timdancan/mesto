@@ -1,7 +1,9 @@
+import { Card } from './Card.js'
+import { FormValidator, validationConfig } from "./FormValidator.js"
+
 const listContainerElement = document.querySelector('.elements') 
 const popupFormNode = document.querySelector('.popup__form');
 const addSrcNode = document.querySelector('.popup__input_add_src')
-const templateElementNode = document.querySelector('.template')
 const popupAddForm = document.querySelector('.popup__form_add')
 const popupCloseForm = document.querySelector('.popup__form_close')
 const addNameNode = document.querySelector('.popup__input_add_name')
@@ -18,10 +20,9 @@ const popupInputTitleNode = document.querySelector('.popup__input_place_title');
 const popupInputSubtitleNode = document.querySelector('.popup__input_place_subtitle');
 const addButtonNode = document.querySelector('.profile__add-button')
 const closeClickAddNode = document.querySelector('.popup__close_add')
-const popupImgNode = document.querySelector('.popup__img')
-const popupTextNode = document.querySelector('.popup__text')
-const headerElementNode = document.querySelectorAll('.element__title')
-const popupOpenImgNode = document.querySelector('.popup_img')
+export const popupImgNode = document.querySelector('.popup__img')
+export const popupTextNode = document.querySelector('.popup__text')
+export const popupOpenImgNode = document.querySelector('.popup_img')
 const popupCloseImgNode = document.querySelector('.popup__close_img')
 const bodyNode = document.querySelector('.body')
 const initialCards = [
@@ -51,9 +52,11 @@ const initialCards = [
   }
 ]; 
 
+const addPopupValidation = new FormValidator (validationConfig, popupAddForm)
+const editPopupValidation = new FormValidator (validationConfig, popupCloseForm)
 
 
-function popupOpen(popup) {
+export function popupOpen(popup) {
   popup.classList.add('popup_visiable')
   bodyNode.addEventListener('keydown', addKey)
 }
@@ -82,11 +85,11 @@ editButtonNode.addEventListener('click', ()=> {
   popupOpen(closePopupNode)
   popupInputTitleNode.value = profileTitleNode.textContent;
   popupInputSubtitleNode.value = profileSubtitleNode.textContent;
-  enableValidation(validationConfig)
+  editPopupValidation.enableValidation()
 });
 addButtonNode.addEventListener('click', ()=>{
   popupOpen(addPopupNode)
-  enableValidation(validationConfig)
+  addPopupValidation.enableValidation()
 });
 closeButtonNode.addEventListener('click', ()=>{
   popupClose(closePopupNode)
@@ -113,49 +116,22 @@ popupCloseImgNode.addEventListener('click', ()=>{
 })
 popupAddForm.addEventListener('submit', addNewItem)
 
-
-
-
-function renderList() {
-
-  const listItems = initialCards.map(composeItem)
-
-  listContainerElement.append(...listItems)
-}
-
-function composeItem(item) {
-  const newItem = templateElementNode.content.cloneNode(true)
-  const headerElement = newItem.querySelector('.element__title')
-  const imgElement = newItem.querySelector('.element__img')
-  imgElement.style.backgroundImage = `url(${item.link})`
-  headerElement.textContent = item.name
-  imgElement.addEventListener('click', ()=> {
-    popupOpen(popupOpenImgNode)
-    popupTextNode.textContent = item.name
-    popupImgNode.src = item.link
-    popupImgNode.alt = item.name
-  })
-  const removeButton = newItem.querySelector('.element__trash')
-  removeButton.addEventListener('click', removeItem)
-  const elementButton = newItem.querySelector('.element__button')
-  elementButton.addEventListener('click', ()=> {
-    elementButton.classList.toggle('element__button_active')
-  })
-  return newItem
-}
-
-function removeItem(evt) {
-  evt.target.closest('.element').remove()
-}
-
 function addNewItem(evt) {
   evt.preventDefault()
-  const inputTitle = addNameNode.value
-  const inputSubtitle = addSrcNode.value
-  const newItem = composeItem({ name: inputTitle, link: inputSubtitle})
-  listContainerElement.prepend(newItem)
+  const newCard = {
+    name: addNameNode.value,
+    link: addSrcNode.value
+  }
+  const addCard = new Card(newCard)
+  const cardElement = addCard.generateCard()
+  listContainerElement.prepend(cardElement)
   popupClose(addPopupNode)
   popupAddForm.reset()
 }
 
-renderList()
+initialCards.forEach(item => {
+  const card = new Card(item)
+  const cardElement = card.generateCard()
+  
+  listContainerElement.append(cardElement)
+})
