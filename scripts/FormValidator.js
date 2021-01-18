@@ -16,6 +16,7 @@ export class FormValidator {
     this._buttonInvalidClass = config.buttonInvalidClass
     this._inputErrorClass = config.inputErrorClass
     this._errorClass = config.errorClass
+    this._button = this._form.querySelector(this._submitButtonSelector)
   }
 
   _showError() {
@@ -39,8 +40,7 @@ export class FormValidator {
     }
   }
   
-  _setButtonState(isActive) {
-    this._button = this._form.querySelector(this._submitButtonSelector)
+  setButtonState(isActive) {
     if(isActive){
       this._button.classList.remove(this._buttonInvalidClass)
       this._button.disabled = false
@@ -56,13 +56,13 @@ export class FormValidator {
     this._inputList.forEach(input => {
       input.addEventListener('input', ()=> {
         this._checkInputValidity(input)
-        this._setButtonState(this._form.checkValidity())
+        this.setButtonState(this._form.checkValidity())
       })
     })
   }
   
   enableValidation() {
-    this._setButtonState(this._form.checkValidity())
+    this.setButtonState(this._form.checkValidity())
     this._setEventListener()
   }
 }

@@ -1,4 +1,4 @@
-import { popupOpen, popupImgNode, popupTextNode, popupOpenImgNode } from './index.js'
+import { openPopup, popupImgNode, popupTextNode, popupOpenImgNode } from './utils.js'
 
 
 export class Card {
@@ -9,6 +9,7 @@ export class Card {
     this._removeButton = this._element.querySelector('.element__trash')
     this._elementButton = this._element.querySelector('.element__button')
     this._elementImg = this._element.querySelector('.element__img')
+    this._headerElement = this._element.querySelector('.element__title')
   }
 
   _getTemplate() {
@@ -21,7 +22,6 @@ export class Card {
     return newItem
   }
 
-  // Установка слушателя
   _setEventListeners() {
     this._removeButton.addEventListener('click', () => this._removeCard())
     this._elementButton.addEventListener('click', () => this._addToggle())
@@ -29,7 +29,8 @@ export class Card {
   }
 
   _removeCard() {
-    this._element.remove()
+    this._element.remove() 
+    this._element = null
   }
 
   _addToggle() {
@@ -37,19 +38,17 @@ export class Card {
   }
 
   _popupOpenImg() {
-    popupOpen(popupOpenImgNode)
+    openPopup(popupOpenImgNode)
     popupTextNode.textContent = this._name
     popupImgNode.src = this._link
     popupImgNode.alt = this._name
   }
 
-  // Создание карточки
   generateCard() {
     this._setEventListeners()
-    const headerElement = this._element.querySelector('.element__title')
     this._elementImg.style.backgroundImage = `url(${this._link})`
-    headerElement.textContent = this._name
-
+    this._elementImg.ariaLabel = this._name
+    this._headerElement.textContent = this._name
     return this._element
   }
 }
