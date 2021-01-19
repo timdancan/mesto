@@ -17,6 +17,8 @@ export class FormValidator {
     this._inputErrorClass = config.inputErrorClass
     this._errorClass = config.errorClass
     this._button = this._form.querySelector(this._submitButtonSelector)
+    this._popupError = this._form.querySelectorAll('.popup__error')
+    this._inputList = this._form.querySelectorAll(this._inputSelector)
   }
 
   _showError() {
@@ -50,9 +52,16 @@ export class FormValidator {
     }
   }
   
+  clearErrors() {
+    this._popupError.forEach(error => {
+      error.textContent = ''
+    })
+    this._inputList.forEach(input => {
+      input.classList.remove('popup__input_type_error')
+    })
+  }
+
   _setEventListener() {
-    this._inputList = this._form.querySelectorAll(this._inputSelector)
-  
     this._inputList.forEach(input => {
       input.addEventListener('input', ()=> {
         this._checkInputValidity(input)
