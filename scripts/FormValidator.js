@@ -57,7 +57,7 @@ export class FormValidator {
       error.textContent = ''
     })
     this._inputList.forEach(input => {
-      input.classList.remove('popup__input_type_error')
+      input.classList.remove(this._inputErrorClass)
     })
   }
 
