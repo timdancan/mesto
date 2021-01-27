@@ -1,7 +1,3 @@
-import { Card } from './Card.js'
-import { FormValidator, validationConfig } from "./FormValidator.js"
-import { openPopup, popupOpenImgNode, closePopup } from './utils.js'
-
 const listContainerElement = document.querySelector('.elements') 
 const addSrcNode = document.querySelector('.popup__input_add_src')
 const popupAddForm = document.querySelector('.popup__form_add')
@@ -46,67 +42,4 @@ const initialCards = [
   }
 ]; 
 
-const addPopupValidation = new FormValidator (validationConfig, popupAddForm)
-const editPopupValidation = new FormValidator (validationConfig, popupCloseForm)
-editPopupValidation.enableValidation()
-addPopupValidation.enableValidation()
-
-
-
-function submitProfileForm(evt) {
-  evt.preventDefault()
-  profileTitleNode.textContent = popupInputTitleNode.value;
-  profileSubtitleNode.textContent = popupInputSubtitleNode.value;
-  closePopup(editPopupNode)
-}
-
-popupCloseForm.addEventListener('submit', submitProfileForm);
-editButtonNode.addEventListener('click', ()=> {
-  editPopupValidation.clearErrors()
-  openPopup(editPopupNode)
-  popupInputTitleNode.value = profileTitleNode.textContent;
-  popupInputSubtitleNode.value = profileSubtitleNode.textContent;
-  editPopupValidation.setButtonState(popupCloseForm.checkValidity())
-});
-addButtonNode.addEventListener('click', ()=>{
-  addPopupValidation.clearErrors()
-  openPopup(addPopupNode)
-  addPopupValidation.setButtonState(popupAddForm.checkValidity())
-});
-closeButtonNode.addEventListener('click', ()=>{
-  closePopup(editPopupNode)
-});
-popupNode.forEach(close=> {
-  close.addEventListener('click', e =>{
-    if (e.target.classList.contains('popup')) {
-      closePopup(close)
-    }
-  })
-})
-closeClickAddNode.addEventListener('click', ()=>{
-  closePopup(addPopupNode)
-})
-
-popupCloseImgNode.addEventListener('click', ()=>{
-  closePopup(popupOpenImgNode)
-})
-popupAddForm.addEventListener('submit', addNewItem)
-
-function addNewItem(evt) {
-  evt.preventDefault()
-  const newCard = {
-    name: addNameNode.value,
-    link: addSrcNode.value
-  }
-  listContainerElement.prepend(createNewCard(newCard))
-  closePopup(addPopupNode)
-  popupAddForm.reset()
-}
-
-initialCards.forEach(item => {
-  listContainerElement.append(createNewCard(item))
-})
-
-function createNewCard(item) {
-  return new Card(item).generateCard()
-}
+export { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, closeButtonNode, popupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, closeClickAddNode, popupCloseImgNode, initialCards }

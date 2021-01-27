@@ -1,7 +1,7 @@
-import { openPopup, popupImgNode, popupTextNode, popupOpenImgNode } from './utils.js'
+import { openPopup, popupImgNode, popupTextNode, popupOpenImgNode } from '../utils/utils.js'
 
 
-export class Card {
+export default class Card {
   constructor(data) {
     this._name = data.name
     this._link = data.link
