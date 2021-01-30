@@ -1,10 +1,8 @@
-import { openPopup, popupImgNode, popupTextNode, popupOpenImgNode } from '../utils/utils.js'
-
-
 export default class Card {
-  constructor(data) {
+  constructor({ data, openImageCard }) {
     this._name = data.name
     this._link = data.link
+    this._openImageCard = openImageCard
     this._element = this._getTemplate()
     this._removeButton = this._element.querySelector('.element__trash')
     this._elementButton = this._element.querySelector('.element__button')
@@ -25,7 +23,7 @@ export default class Card {
   _setEventListeners() {
     this._removeButton.addEventListener('click', () => this._removeCard())
     this._elementButton.addEventListener('click', () => this._addToggle())
-    this._elementImg.addEventListener('click', () => this._popupOpenImg())
+    this._elementImg.addEventListener('click', () => this._openImageCard(this._name, this._link))
   }
 
   _removeCard() {
@@ -33,15 +31,9 @@ export default class Card {
     this._element = null
   }
 
+
   _addToggle() {
     this._elementButton.classList.toggle('element__button_active')
-  }
-
-  _popupOpenImg() {
-    openPopup(popupOpenImgNode)
-    popupTextNode.textContent = this._name
-    popupImgNode.src = this._link
-    popupImgNode.alt = this._name
   }
 
   generateCard() {

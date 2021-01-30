@@ -3,6 +3,9 @@ import { FormValidator, validationConfig } from "../scripts/components/FormValid
 import { openPopup, popupOpenImgNode, closePopup } from '../scripts/utils/utils.js'
 import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, closeButtonNode, popupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, closeClickAddNode, popupCloseImgNode, initialCards } from '../scripts/utils/constans.js'
 import Section from '../scripts/components/Section.js'
+// import PopupWithForm from '../scripts/components/PopupWithForm.js'
+import PopupWithImage from '../scripts/components/PopupWithImage.js'
+// import UserInfo from '../scripts/components/UserInfo.js'
 
 const addPopupValidation = new FormValidator (validationConfig, popupAddForm)
 const editPopupValidation = new FormValidator (validationConfig, popupCloseForm)
@@ -16,11 +19,36 @@ const defaultCardList  = new Section({
   } 
 }, listContainerElement)
 
+
 function createNewCard(item) {
-  return new Card(item).generateCard()
+  return new Card({data: item, openImageCard}).generateCard()
 }
 
 defaultCardList.renderItems()
+
+function openImageCard(name, link) {
+  popupWithImage.open(name, link)
+}
+
+
+const popupWithImage = new PopupWithImage(popupOpenImgNode);
+popupWithImage.setEventListeners()
+
+// const UserInfo = new UserInfo(profileTitleNode, profileSubtitleNode)
+
+// const PopupWithForm = new PopupWithForm(editPopupNode, ()=> {
+//   formSubmitCallBack: (data) => {
+//     userInfo.setInfo(data)
+//     PopupWithForm.close()
+//   }
+// })
+// PopupWithForm.setEventListeners()
+
+// const addNewCardPopup = new PopupWithForm(addPopupNode, ()=> {
+//   formSubmitCallBack: (data) => {
+    
+//   }
+// })
 
 function submitProfileForm(evt) {
   evt.preventDefault()
@@ -56,9 +84,9 @@ closeClickAddNode.addEventListener('click', ()=>{
   closePopup(addPopupNode)
 })
 
-popupCloseImgNode.addEventListener('click', ()=>{
-  closePopup(popupOpenImgNode)
-})
+// popupCloseImgNode.addEventListener('click', ()=>{
+//   closePopup(popupOpenImgNode)
+// })
 popupAddForm.addEventListener('submit', addNewItem)
 
 function addNewItem(evt) {
