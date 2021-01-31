@@ -5,6 +5,7 @@ export default class Popup {
     this._escKeyCode = "Escape";
     this._popupActive = document.querySelector(".popup_visiable");
     this._closeButtonNode = this._popupSelector.querySelector(".popup__close");
+    this._handleEscClose = this._handleEscClose.bind(this)
   }
 
   open() {

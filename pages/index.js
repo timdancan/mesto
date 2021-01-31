@@ -1,7 +1,6 @@
 import Card from '../scripts/components/Card.js'
 import { FormValidator, validationConfig } from "../scripts/components/FormValidator.js"
-import { openPopup, popupOpenImgNode, closePopup } from '../scripts/utils/utils.js'
-import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, closeButtonNode, popupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, closeClickAddNode, popupCloseImgNode, initialCards } from '../scripts/utils/constans.js'
+import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, popupOpenImgNode, initialCards } from '../scripts/utils/constans.js'
 import Section from '../scripts/components/Section.js'
 import PopupWithForm from '../scripts/components/PopupWithForm.js'
 import PopupWithImage from '../scripts/components/PopupWithImage.js'
@@ -15,7 +14,7 @@ addPopupValidation.enableValidation()
 const popupWithImage = new PopupWithImage(popupOpenImgNode);
 popupWithImage.setEventListeners()
 
-const userInfo = new UserInfo( {profileTitleNode, profileSubtitleNode} )
+const userInfo = new UserInfo( profileTitleNode, profileSubtitleNode )
 
 
 const defaultCardList  = new Section({ 
@@ -39,25 +38,31 @@ function openImageCard(name, link) {
 
 const popupWithFormEdit = new PopupWithForm(editPopupNode, handlePopupProfile)
 
-function handlePopupProfile (inputsData) {
-  userInfo.setInfo(inputsData)
-  popupWithFormEdit.close()
-}
 popupWithFormEdit.setEventListeners()
 
+function handlePopupProfile () {
+  userInfo.setInfo(popupInputTitleNode.value, popupInputSubtitleNode.value)
+  popupWithFormEdit.close()
+}
+
 editButtonNode.addEventListener('click', ()=> {
+  const data = userInfo.getInfo()
+  popupInputTitleNode.value = data.name;
+  popupInputSubtitleNode.value = data.description;
   editPopupValidation.clearErrors()
-  // const data = userInfo.getInfo()
-  // popupInputTitleNode.value = data.name;
-  // popupInputSubtitleNode.value = data.description;
   popupWithFormEdit.open()
   editPopupValidation.setButtonState(popupCloseForm.checkValidity())
 })
 
+
 const popupWithFormAdd = new PopupWithForm(addPopupNode, handlePopupAddCard)
 
-function handlePopupAddCard (inputsData) {
-  defaultCardList.setNewItem(createNewCard(inputsData))
+function handlePopupAddCard () {
+  const item = {
+    name: addNameNode.value,
+    link: addSrcNode.value
+  }
+  defaultCardList.setNewItem(createNewCard(item))
   popupWithFormAdd.close()
 }
 
