@@ -1,6 +1,6 @@
 import Card from '../scripts/components/Card.js'
 import { FormValidator, validationConfig } from "../scripts/components/FormValidator.js"
-import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, popupOpenImgNode, initialCards } from '../scripts/utils/constans.js'
+import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, popupOpenImgNode, initialCards, selectorObj } from '../scripts/utils/constans.js'
 import Section from '../scripts/components/Section.js'
 import PopupWithForm from '../scripts/components/PopupWithForm.js'
 import PopupWithImage from '../scripts/components/PopupWithImage.js'
@@ -15,7 +15,7 @@ function openImageCard(name, link) {
 }
 
 function createNewCard(item) {
-  return new Card({data: item, openImageCard}).generateCard()
+  return new Card({data: item, openImageCard}, selectorObj.template).generateCard()
 }
 
 function handlePopupAddCard () {
@@ -56,13 +56,13 @@ addPopupValidation.enableValidation()
 
 const userInfo = new UserInfo(profileTitleNode, profileSubtitleNode)
 
-const popupWithImage = new PopupWithImage(popupOpenImgNode);
+const popupWithImage = new PopupWithImage(selectorObj.popupImageSelector);
 popupWithImage.setEventListeners()
 
-const popupWithFormEdit = new PopupWithForm(editPopupNode, handlePopupProfile)
+const popupWithFormEdit = new PopupWithForm(selectorObj.popupProfileSelector, handlePopupProfile)
 popupWithFormEdit.setEventListeners()
 
-const popupWithFormAdd = new PopupWithForm(addPopupNode, handlePopupAddCard)
+const popupWithFormAdd = new PopupWithForm(selectorObj.popupAddCardSelector, handlePopupAddCard)
 popupWithFormAdd.setEventListeners()
 
 const defaultCardList  = new Section({ 

@@ -39,4 +39,12 @@ const initialCards = [
   }
 ]; 
 
-export { listContainerElement, popupOpenImgNode, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, initialCards }
+const selectorObj = {
+    popupImageSelector: '.popup_img',
+    popupProfileSelector: '.popup_edit',
+    popupAddCardSelector: '.popup_add',
+    elementsSelector: '.elements',
+    template: '.template'
+  };
+
+export { listContainerElement, selectorObj, popupOpenImgNode, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, initialCards }

@@ -1,7 +1,8 @@
 export default class Card {
-  constructor({ data, openImageCard }) {
+  constructor({ data, openImageCard }, template) {
     this._name = data.name
     this._link = data.link
+    this._cardSelector = template
     this._openImageCard = openImageCard
     this._element = this._getTemplate()
     this._removeButton = this._element.querySelector('.element__trash')
@@ -12,7 +13,7 @@ export default class Card {
 
   _getTemplate() {
     const newItem = document
-    .querySelector('.template')
+    .querySelector(this._cardSelector)
     .content.querySelector('.element')
     .cloneNode(true)
 
