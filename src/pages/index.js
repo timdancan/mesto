@@ -1,14 +1,22 @@
 import Card from '../scripts/components/Card.js'
 import { FormValidator, validationConfig } from "../scripts/components/FormValidator.js"
-import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, popupOpenImgNode, initialCards, selectorObj } from '../scripts/utils/constans.js'
+import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, initialCards, selectorObj } from '../scripts/utils/constans.js'
 import Section from '../scripts/components/Section.js'
 import PopupWithForm from '../scripts/components/PopupWithForm.js'
 import PopupWithImage from '../scripts/components/PopupWithImage.js'
 import UserInfo from '../scripts/components/UserInfo.js'
+import Api from '../scripts/components/Api.js'
 
 import './index.css'
 
 
+const api = new Api({
+  url:'https://mesto.nomoreparties.co/v1/cohort-20',
+  headers:"424dcfe6-7281-4ce4-8ed0-0018c46e204a"
+})
+
+api.getUserData()
+api.getInitialCards()
 
 function openImageCard(name, link) {
   popupWithImage.open(name, link)
