@@ -44,7 +44,8 @@ const selectorObj = {
     popupProfileSelector: '.popup_edit',
     popupAddCardSelector: '.popup_add',
     elementsSelector: '.elements',
-    template: '.template'
+    template: '.template',
+    popupConfirmSelector: '.popup_confirm'
   };
 
 export { listContainerElement, selectorObj, popupOpenImgNode, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, editPopupNode, addPopupNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, initialCards }

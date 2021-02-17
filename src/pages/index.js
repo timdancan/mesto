@@ -6,7 +6,7 @@ import PopupWithForm from '../scripts/components/PopupWithForm.js'
 import PopupWithImage from '../scripts/components/PopupWithImage.js'
 import UserInfo from '../scripts/components/UserInfo.js'
 import Api from '../scripts/components/Api.js'
-
+import PopupWithConfirm from '../scripts/components/PopupWithConfirm'
 import './index.css'
 
 
@@ -15,15 +15,16 @@ const api = new Api({
   headers:"424dcfe6-7281-4ce4-8ed0-0018c46e204a"
 })
 
-api.getUserData()
-api.getInitialCards()
+function handleTrashClick(cardId) {
+  popupWithConfirm.open(cardId)
+}
 
 function openImageCard(name, link) {
   popupWithImage.open(name, link)
 }
 
 function createNewCard(item) {
-  return new Card({data: item, openImageCard}, selectorObj.template).generateCard()
+  return new Card({data: item, openImageCard, handleTrashClick}, selectorObj.template).generateCard()
 }
 
 function handlePopupAddCard () {
@@ -32,11 +33,20 @@ function handlePopupAddCard () {
     link: addSrcNode.value
   }
   defaultCardList.setNewItem(createNewCard(item))
+  api.postNewCard(item)
   popupWithFormAdd.close()
 }
 
+function handlePopupConfirm(cardId) {
+  api.deleteCard(cardId)
+  popupWithConfirm.close();
+}
+
+
+
 function handlePopupProfile () {
   userInfo.setInfo(popupInputTitleNode.value, popupInputSubtitleNode.value)
+  api.saveUserChanges(popupInputTitleNode.value, popupInputSubtitleNode.value)
   popupWithFormEdit.close()
 }
 
@@ -73,10 +83,26 @@ popupWithFormEdit.setEventListeners()
 const popupWithFormAdd = new PopupWithForm(selectorObj.popupAddCardSelector, handlePopupAddCard)
 popupWithFormAdd.setEventListeners()
 
+// const popupWithConfirm = new PopupWithConfirm(selectorObj.popupConfirmSelector, handlePopupConfirm);
+// popupWithConfirm.setEventListeners();
+
 const defaultCardList  = new Section({ 
   data: initialCards,
   renderer: (item)=> {
     defaultCardList.setItem(createNewCard(item))
   } 
 }, listContainerElement)
-defaultCardList.renderItems()
+
+api.getUserData()
+api.getInitialCards()
+  .then(result => {
+    console.log(result)
+    const data = result.map(item => {
+      return defaultCardList.setItem(createNewCard(item))
+    })
+    console.log(data)
+  })
+  .catch((err) => {
+    console.log(err);
+    defaultCardList.renderItems()
+  });

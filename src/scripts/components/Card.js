@@ -1,5 +1,5 @@
 export default class Card {
-  constructor({ data, openImageCard }, template) {
+  constructor({ data, openImageCard, handleTrashClick }, template) {
     this._name = data.name
     this._link = data.link
     this._cardSelector = template
@@ -9,6 +9,9 @@ export default class Card {
     this._elementButton = this._element.querySelector('.element__button')
     this._elementImg = this._element.querySelector('.element__img')
     this._headerElement = this._element.querySelector('.element__title')
+    this._showPopupConfirm = handleTrashClick;
+    this._owner = data.owner;
+    this._id = data._id;
   }
 
   _getTemplate() {
@@ -22,15 +25,15 @@ export default class Card {
   }
 
   _setEventListeners() {
-    this._removeButton.addEventListener('click', () => this._removeCard())
+    this._removeButton.addEventListener('click', () => this._showPopupConfirm(this._id, this._element))
     this._elementButton.addEventListener('click', () => this._addToggle())
     this._elementImg.addEventListener('click', () => this._openImageCard(this._name, this._link))
   }
 
-  _removeCard() {
-    this._element.remove() 
-    this._element = null
-  }
+  // _removeCard() {
+  //   this._element.remove() 
+  //   this._element = null
+  // }
 
 
   _addToggle() {
@@ -43,6 +46,11 @@ export default class Card {
     this._elementImg.ariaLabel = this._name
     this._headerElement.textContent = this._name
     return this._element
+  }
+
+  deleteCard() {
+    this._element.remove();
+    this._element = null;
   }
 }
 

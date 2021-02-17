@@ -43,10 +43,10 @@ export default class Api {
       })
   }
 
-  saveUserChanges({
+  saveUserChanges(
     name,
     about
-  }) {
+  ) {
     return fetch(this._userUrl, {
         method: 'PATCH',
         headers: {
