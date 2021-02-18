@@ -83,8 +83,8 @@ popupWithFormEdit.setEventListeners()
 const popupWithFormAdd = new PopupWithForm(selectorObj.popupAddCardSelector, handlePopupAddCard)
 popupWithFormAdd.setEventListeners()
 
-// const popupWithConfirm = new PopupWithConfirm(selectorObj.popupConfirmSelector, handlePopupConfirm);
-// popupWithConfirm.setEventListeners();
+const popupWithConfirm = new PopupWithConfirm(selectorObj.popupConfirmSelector, handlePopupConfirm);
+popupWithConfirm.setEventListeners();
 
 const defaultCardList  = new Section({ 
   data: initialCards,
@@ -97,10 +97,9 @@ api.getUserData()
 api.getInitialCards()
   .then(result => {
     console.log(result)
-    const data = result.map(item => {
+    result.map(item => {
       return defaultCardList.setItem(createNewCard(item))
     })
-    console.log(data)
   })
   .catch((err) => {
     console.log(err);
