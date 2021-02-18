@@ -1,17 +1,18 @@
 export default class Card {
-  constructor({ data, openImageCard, handleTrashClick }, template) {
+  constructor({ data, openImageCard, handleTrashClick }, template, userId) {
     this._name = data.name
     this._link = data.link
     this._cardSelector = template
     this._openImageCard = openImageCard
     this._element = this._getTemplate()
-    this._removeButton = this._element.querySelector('.element__trash')
+    this._delete = this._element.querySelector('.element__trash')
     this._elementButton = this._element.querySelector('.element__button')
     this._elementImg = this._element.querySelector('.element__img')
     this._headerElement = this._element.querySelector('.element__title')
-    this._showPopupConfirm = handleTrashClick;
-    this._owner = data.owner;
-    this._id = data._id;
+    this._handleTrashClick = handleTrashClick;
+    this._idOwner = data.owner._id;
+    this._userId = userId;
+    this._cardId = data._id
   }
 
   _getTemplate() {
@@ -25,15 +26,15 @@ export default class Card {
   }
 
   _setEventListeners() {
-    this._removeButton.addEventListener('click', () => this._showPopupConfirm(this._id, this._element))
+    this._delete.addEventListener('click', () => this._handleTrashClick(this._cardId, this._element))
     this._elementButton.addEventListener('click', () => this._addToggle())
     this._elementImg.addEventListener('click', () => this._openImageCard(this._name, this._link))
   }
 
-  // _removeCard() {
-  //   this._element.remove() 
-  //   this._element = null
-  // }
+  removeCard() {
+    this._element.remove() 
+    this._element = null
+  }
 
 
   _addToggle() {
@@ -45,12 +46,11 @@ export default class Card {
     this._elementImg.style.backgroundImage = `url(${this._link})`
     this._elementImg.ariaLabel = this._name
     this._headerElement.textContent = this._name
-    return this._element
-  }
+    if(this._userId !== this._idOwner) {
+      this._delete.remove()
+    }
 
-  deleteCard() {
-    this._element.remove();
-    this._element = null;
+    return this._element
   }
 }
 

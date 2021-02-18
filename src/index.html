@@ -51,7 +51,7 @@
         <button class="popup__close page-link" type="button"></button>
         <h3 class="popup__title">Обновить аватар</h3>
         <form class="popup__form popup__form_change" name="popup-change" novalidate>
-          <label class="popup__label popup__label_change"><input type="url" class="popup__input popup__input_add_src" id="input-url" name="Url" placeholder="Ссылка на картинку" required><span class="popup__error" id="input-url-error"></span></label>
+          <label class="popup__label popup__label_change"><input type="url" class="popup__input" id="input-url" name="Url" placeholder="Ссылка на картинку" required><span class="popup__error" id="input-url-error"></span></label>
           <button class="popup__button" type="submit">Сохранить</button>
         </form>
       </div>
@@ -61,7 +61,9 @@
       <div class="popup__content">
         <button class="popup__close page-link" type="button"></button>
         <h3 class="popup__title popup__title_confirm">Вы уверены?</h3>
-        <button class="popup__button popup__button_confirm" type="submit">Да</button>
+        <form class="popup__form popup__form_confirm" name="popup-confirm" novalidate></form>
+          <button class="popup__button popup__button_confirm" type="submit">Да</button>
+        </form>
       </div>
     </div>
 

@@ -19,14 +19,13 @@ export default class Api {
         }
         return Promise.reject(`Ошибка: ${res.status}`);
       })
-      .then(data => {
-        document.querySelector('.profile__title').textContent = data.name;
-        document.querySelector('.profile__subtitle').textContent = data.about;
-        document.querySelector('.profile__avatar').src = data.avatar;
-        console.log(data);
-        return data;
-        
-      });
+      // .then(data => {
+      //   document.querySelector('.profile__title').textContent = data.name;
+      //   document.querySelector('.profile__subtitle').textContent = data.about;
+      //   document.querySelector('.profile__avatar').src = data.avatar;
+      //   console.log(data);
+      //   return data;
+      // });
   } 
 
   getInitialCards() {

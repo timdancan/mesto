@@ -15,16 +15,32 @@ const api = new Api({
   headers:"424dcfe6-7281-4ce4-8ed0-0018c46e204a"
 })
 
-function handleTrashClick(cardId) {
-  popupWithConfirm.open(cardId)
+function handleTrashClick(id, card) {
+  popupWithConfirm.setSubmitAction(() => handlePopupConfirm(id, card))
+  popupWithConfirm.open()
+}
+
+function handlePopupConfirm (id, card) {
+  api.deleteCard(id)
+    .then(()=> {
+      card.removeCard()
+      popupWithConfirm.close()
+    })
+    .catch((err) => {
+      console.log(err);
+      popupWithConfirm.close();
+    });
 }
 
 function openImageCard(name, link) {
   popupWithImage.open(name, link)
 }
 
-function createNewCard(item) {
-  return new Card({data: item, openImageCard, handleTrashClick}, selectorObj.template).generateCard()
+
+function createNewCard(item, id) {
+  const card = new Card({data: item, openImageCard, handleTrashClick}, selectorObj.template, id)
+  const newCard = card.generateCard()
+  return newCard
 }
 
 function handlePopupAddCard () {
@@ -32,22 +48,31 @@ function handlePopupAddCard () {
     name: addNameNode.value,
     link: addSrcNode.value
   }
-  defaultCardList.setNewItem(createNewCard(item))
+  console.log(item);
   api.postNewCard(item)
-  popupWithFormAdd.close()
+    .then((data) => {
+      // console.log(data)
+      defaultCardList.setNewItem(createNewCard(data, data.owner._id))
+      popupWithFormAdd.close()
+    })
+    .catch((err) => {
+      console.log(err);
+    })
 }
-
-function handlePopupConfirm(cardId) {
-  api.deleteCard(cardId)
-  popupWithConfirm.close();
-}
-
-
 
 function handlePopupProfile () {
-  userInfo.setInfo(popupInputTitleNode.value, popupInputSubtitleNode.value)
   api.saveUserChanges(popupInputTitleNode.value, popupInputSubtitleNode.value)
-  popupWithFormEdit.close()
+    .then((data) => {
+      console.log(data)
+      userInfo.setInfo(
+        data.name,
+        data.about
+      )
+      popupWithFormEdit.close()
+    })
+    .catch((err) => {
+      console.log(err);
+    })
 }
 
 editButtonNode.addEventListener('click', ()=> {
@@ -83,22 +108,33 @@ popupWithFormEdit.setEventListeners()
 const popupWithFormAdd = new PopupWithForm(selectorObj.popupAddCardSelector, handlePopupAddCard)
 popupWithFormAdd.setEventListeners()
 
-const popupWithConfirm = new PopupWithConfirm(selectorObj.popupConfirmSelector, handlePopupConfirm);
+const popupWithConfirm = new PopupWithConfirm(selectorObj.popupConfirmSelector);
 popupWithConfirm.setEventListeners();
 
 const defaultCardList  = new Section({ 
-  data: initialCards,
-  renderer: (item)=> {
-    defaultCardList.setItem(createNewCard(item))
+  renderer: (item, id)=> {
+    defaultCardList.setItem(createNewCard(item, id))
   } 
 }, listContainerElement)
 
+
+
 api.getUserData()
+  .then(value => {
+    userInfo.setInfo(
+      value.name,
+      value.about
+    )
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+
 api.getInitialCards()
   .then(result => {
     console.log(result)
     result.map(item => {
-      return defaultCardList.setItem(createNewCard(item))
+      return defaultCardList.setItem(createNewCard(item, item._id))
     })
   })
   .catch((err) => {
