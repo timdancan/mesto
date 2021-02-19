@@ -10,11 +10,6 @@ import PopupWithConfirm from '../scripts/components/PopupWithConfirm'
 import './index.css'
 
 
-const api = new Api({
-  url:'https://mesto.nomoreparties.co/v1/cohort-20',
-  headers:"424dcfe6-7281-4ce4-8ed0-0018c46e204a"
-})
-
 function handleLikeClick(id, isLiked, card) {
   if (isLiked) {
     api.dislikedCard(id)
@@ -27,7 +22,7 @@ function handleLikeClick(id, isLiked, card) {
   } else {
     api.likedCard(id)
       .then((data) => {
-        card.setLikes(data.likes);
+        card.setLikes(data.likes)
       })
       .catch((err) => {
         console.log(err);
@@ -170,6 +165,11 @@ popupWithFormAdd.setEventListeners()
 const popupWithConfirm = new PopupWithConfirm(selectorObj.popupConfirmSelector);
 popupWithConfirm.setEventListeners();
 
+const api = new Api({
+  url:'https://mesto.nomoreparties.co/v1/cohort-20',
+  headers:"424dcfe6-7281-4ce4-8ed0-0018c46e204a"
+})
+
 const popupChangeAvatar = new PopupWithForm(selectorObj.popupChangeSelector, handlePopupChangeAvatar)
 popupChangeAvatar.setEventListeners()
 
@@ -178,31 +178,6 @@ const defaultCardList  = new Section({
     defaultCardList.setItem(createNewCard(item, id))
   } 
 }, listContainerElement)
-
-
-
-// api.getUserData()
-//   .then(value => {
-//     userInfo.setInfo(
-//       value.name,
-//       value.about,
-//       value.avatar
-//     )
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   })
-
-// api.getInitialCards()
-//   .then(result => {
-//     console.log(result)
-//     result.map(item => {
-//       return defaultCardList.setItem(createNewCard(item, item._id))
-//     })
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
 
   Promise.all([
     api.getUserData(),
@@ -215,9 +190,7 @@ const defaultCardList  = new Section({
         value[0].about,
         value[0].avatar
       )
-      value[1].map(item => {
-        return defaultCardList.setItem(createNewCard(item, item._id))
-      })
+      defaultCardList.renderItems(value[1], value[0]._id)
     })
     .catch((err) => {
           console.log(err);
