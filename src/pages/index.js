@@ -181,40 +181,44 @@ const defaultCardList  = new Section({
 
 
 
-api.getUserData()
-  .then(value => {
-    userInfo.setInfo(
-      value.name,
-      value.about,
-      value.avatar
-    )
-  })
-  .catch((err) => {
-    console.log(err);
-  })
+// api.getUserData()
+//   .then(value => {
+//     userInfo.setInfo(
+//       value.name,
+//       value.about,
+//       value.avatar
+//     )
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   })
 
-api.getInitialCards()
-  .then(result => {
-    console.log(result)
-    result.map(item => {
-      return defaultCardList.setItem(createNewCard(item, item._id))
+// api.getInitialCards()
+//   .then(result => {
+//     console.log(result)
+//     result.map(item => {
+//       return defaultCardList.setItem(createNewCard(item, item._id))
+//     })
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+  Promise.all([
+    api.getUserData(),
+    api.getInitialCards()
+  ])
+    .then(value => {
+      console.log(value);
+      userInfo.setInfo(
+        value[0].name,
+        value[0].about,
+        value[0].avatar
+      )
+      value[1].map(item => {
+        return defaultCardList.setItem(createNewCard(item, item._id))
+      })
     })
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-  // Promise.all([
-  //   api.getUserData(),
-  //   api.getInitialCards()
-  // ])
-  //   .then(value => {
-  //     userInfo.setInfo(
-  //       value.name,
-  //       value.about,
-  //       value.avatar
-  //     )
-  //     value.map(item => {
-  //       return defaultCardList.setItem(createNewCard(item, item._id))
-  //     })
-  //   })
+    .catch((err) => {
+          console.log(err);
+    });
