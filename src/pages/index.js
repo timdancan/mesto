@@ -1,6 +1,6 @@
 import Card from '../scripts/components/Card.js'
 import { FormValidator, validationConfig } from "../scripts/components/FormValidator.js"
-import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, addButtonNode, initialCards, selectorObj } from '../scripts/utils/constans.js'
+import { listContainerElement, addSrcNode, popupAddForm, popupCloseForm, addNameNode, editButtonNode, profileTitleNode, profileSubtitleNode, popupInputTitleNode, popupInputSubtitleNode, profileAvatar, changeAvatarNode, addButtonNode, selectorObj, changeAvatarButton, popupChangeForm } from '../scripts/utils/constans.js'
 import Section from '../scripts/components/Section.js'
 import PopupWithForm from '../scripts/components/PopupWithForm.js'
 import PopupWithImage from '../scripts/components/PopupWithImage.js'
@@ -15,12 +15,33 @@ const api = new Api({
   headers:"424dcfe6-7281-4ce4-8ed0-0018c46e204a"
 })
 
+function handleLikeClick(id, isLiked, card) {
+  if (isLiked) {
+    api.dislikedCard(id)
+      .then((data) => {
+        card.setLikes(data.likes)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    api.likedCard(id)
+      .then((data) => {
+        card.setLikes(data.likes);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+}
+
 function handleTrashClick(id, card) {
   popupWithConfirm.setSubmitAction(() => handlePopupConfirm(id, card))
   popupWithConfirm.open()
 }
 
-function handlePopupConfirm (id, card) {
+function handlePopupConfirm(id, card) {
+  console.log(id);
   api.deleteCard(id)
     .then(()=> {
       card.removeCard()
@@ -38,12 +59,13 @@ function openImageCard(name, link) {
 
 
 function createNewCard(item, id) {
-  const card = new Card({data: item, openImageCard, handleTrashClick}, selectorObj.template, id)
+  const card = new Card({data: item, openImageCard, handleTrashClick, handleLikeClick}, selectorObj.template, id)
   const newCard = card.generateCard()
   return newCard
 }
 
 function handlePopupAddCard () {
+  popupWithFormAdd.renderSaving(true)
   const item = {
     name: addNameNode.value,
     link: addSrcNode.value
@@ -51,29 +73,63 @@ function handlePopupAddCard () {
   console.log(item);
   api.postNewCard(item)
     .then((data) => {
-      // console.log(data)
+      console.log(data.owner._id)
       defaultCardList.setNewItem(createNewCard(data, data.owner._id))
       popupWithFormAdd.close()
     })
     .catch((err) => {
       console.log(err);
     })
+    .finally(()=> {
+      popupWithFormAdd.renderSaving(false)
+    })
 }
 
 function handlePopupProfile () {
+  popupWithFormEdit.renderSaving(true)
   api.saveUserChanges(popupInputTitleNode.value, popupInputSubtitleNode.value)
     .then((data) => {
       console.log(data)
       userInfo.setInfo(
         data.name,
-        data.about
+        data.about,
+        data.avatar
       )
       popupWithFormEdit.close()
     })
     .catch((err) => {
       console.log(err);
     })
+    .finally(()=> {
+      popupWithFormEdit.renderSaving(false)
+    })
 }
+
+function handlePopupChangeAvatar() {
+  popupChangeAvatar.renderSaving(true)
+  const avatar = {
+    link: changeAvatarNode.value
+  }
+  console.log(avatar)
+  api.changedAvatar(avatar)
+    .then((data) => {
+      console.log(data);
+      userInfo._avatar.src = data.avatar;
+      popupChangeAvatar.close();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(()=> {
+      popupChangeAvatar.renderSaving(false)
+    })
+}
+
+changeAvatarButton.addEventListener('click', ()=> {
+  changePopupValidation.clearErrors()
+  popupChangeAvatar.open()
+  changePopupValidation.setButtonState(popupChangeForm.checkValidity())
+})
 
 editButtonNode.addEventListener('click', ()=> {
   const data = userInfo.getInfo()
@@ -97,7 +153,10 @@ editPopupValidation.enableValidation()
 const addPopupValidation = new FormValidator (validationConfig, popupAddForm)
 addPopupValidation.enableValidation()
 
-const userInfo = new UserInfo(profileTitleNode, profileSubtitleNode)
+const changePopupValidation = new FormValidator (validationConfig, popupChangeForm)
+changePopupValidation.enableValidation()
+
+const userInfo = new UserInfo(profileTitleNode, profileSubtitleNode, profileAvatar)
 
 const popupWithImage = new PopupWithImage(selectorObj.popupImageSelector);
 popupWithImage.setEventListeners()
@@ -111,6 +170,9 @@ popupWithFormAdd.setEventListeners()
 const popupWithConfirm = new PopupWithConfirm(selectorObj.popupConfirmSelector);
 popupWithConfirm.setEventListeners();
 
+const popupChangeAvatar = new PopupWithForm(selectorObj.popupChangeSelector, handlePopupChangeAvatar)
+popupChangeAvatar.setEventListeners()
+
 const defaultCardList  = new Section({ 
   renderer: (item, id)=> {
     defaultCardList.setItem(createNewCard(item, id))
@@ -123,7 +185,8 @@ api.getUserData()
   .then(value => {
     userInfo.setInfo(
       value.name,
-      value.about
+      value.about,
+      value.avatar
     )
   })
   .catch((err) => {
@@ -139,5 +202,19 @@ api.getInitialCards()
   })
   .catch((err) => {
     console.log(err);
-    defaultCardList.renderItems()
   });
+
+  // Promise.all([
+  //   api.getUserData(),
+  //   api.getInitialCards()
+  // ])
+  //   .then(value => {
+  //     userInfo.setInfo(
+  //       value.name,
+  //       value.about,
+  //       value.avatar
+  //     )
+  //     value.map(item => {
+  //       return defaultCardList.setItem(createNewCard(item, item._id))
+  //     })
+  //   })
