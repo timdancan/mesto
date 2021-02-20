@@ -109,7 +109,11 @@ function handlePopupChangeAvatar() {
   api.changedAvatar(avatar)
     .then((data) => {
       console.log(data);
-      userInfo._avatar.src = data.avatar;
+      userInfo.setInfo(
+        data.name,
+        data.about,
+        data.avatar
+      )
       popupChangeAvatar.close();
     })
     .catch((err) => {
@@ -183,15 +187,14 @@ const defaultCardList  = new Section({
     api.getUserData(),
     api.getInitialCards()
   ])
-    .then(value => {
-      console.log(value);
-      userInfo.setInfo(
-        value[0].name,
-        value[0].about,
-        value[0].avatar
-      )
-      defaultCardList.renderItems(value[1], value[0]._id)
-    })
+  .then(([userData, cards]) => {
+    userInfo.setInfo(
+      userData.name,
+      userData.about,
+      userData.avatar
+    )
+    defaultCardList.renderItems(cards, userData._id)
+  })
     .catch((err) => {
           console.log(err);
     });
